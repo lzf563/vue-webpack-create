@@ -2,6 +2,8 @@ const path = require('path'); // 路径处理模块 nodeJs基本包
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require('html-webpack-plugin') // html解析插件
+
+
 module.exports = {
     entry: path.resolve(__dirname,"../src/main.js"), // 项目总入口js文件 __dirname表示当前文件的路径
      // 输出文件
@@ -14,12 +16,19 @@ module.exports = {
             {
                 test: /\.vue$/,
                 loader: 'vue-loader',
-                options: {
-                    loaders: {
-                        'scss': 'vue-style-loader!css-loader!sass-loader',
-                        'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
+                options:{
+                    loaders:{
+                        'scss':[
+                            'vue-style-loader',
+                            'css-loader',
+                            'sass-loader'
+                        ],
+                        'sass':[
+                            'vue-style-loader',
+                            'css-loader',
+                            'sass-loader?indentedSyntax'
+                        ]
                     }
-                    // other vue-loader options go here
                 }
             },
             {
@@ -32,6 +41,15 @@ module.exports = {
                 use: ['style-loader', 'css-loader'],
                 // loader: 'css-loader!style-loader',
                 // exclude: /node_modules/
+            },
+            //当项目中引入了scss之后，需要在这里进行添加一个scss代码识别
+            {
+                test: /\.scss$/, 
+                use: ["style-loader",'css-loader','sass-loader']
+            },
+            {
+                test: /\.less$/,
+                loader: "style-loader!css-loader!less-loader"
             },
 
             {
@@ -72,7 +90,7 @@ module.exports = {
             template: 'index.html', // 当webpack自动生成html文件的时候，会基于某个模板来进行
             inject: "body", // 所有javascript资源将被放置在body元素的底部
             chunks: ["main"] // 只添加main.js/main.css
-        })
+        }),
     ],
     // https://www.jianshu.com/p/62dc120d96d0
     // 使用eval打包源文件模块，在同一个文件中生成干净的完整的source map。这个选项可以在不影响构建速度的前提下生成完整的sourcemap，但是对打包后
