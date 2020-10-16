@@ -30,14 +30,23 @@ module.exports = {
             {
                 test: /\.css$/i,
                 use: ['style-loader', 'css-loader'],
+                // loader: 'css-loader!style-loader',
+                // exclude: /node_modules/
             },
+
             {
-                test: /\.styl/,
+                test: /\.style/,
                 use: [
                     'style-loader',
                     'css-loader',
                     'stylus-loader'//这个loader依赖stylus这个包，所以装的时候还要安装这个stylus
                 ]
+            },
+            
+            //解析el的文件
+            {
+                test: /\.(woff|svg|eot|ttf)\??.*$/,
+                loader: 'url-loader'
             },
             {
                 test: /\.(png|jpg|gif|svg)$/,
@@ -47,7 +56,6 @@ module.exports = {
                         if (process.env.NODE_ENV === 'development') {
                         return '[path][name].[ext]';
                         }
-
                         return '[hash].[ext]';
                     },
                     limit: 8192,
